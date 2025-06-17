@@ -17,7 +17,7 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("Inventory Management API")
+                        .title("GroMart API")
                         .description("Spring Boot REST API secured with JWT")
                         .version("1.0"))
                 .components(new Components()
