@@ -1,15 +1,38 @@
-package com.app.gromart.dto;
+package com.app.gromart.Entity;
 
-public class SignupRequest {
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "users")
+public class User {
+
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private Long id; 
+
+    @Column(unique = true, nullable = false) 
     private String username; 
-    private String name; 
-    private String password; 
-    private String email; 
-    private String phone;
-    private String role; // ✅ Added role field
 
-    public SignupRequest(String username, String name, String password, String email, String phone, String role) {
+    @Column(nullable = false) 
+    private String name; 
+
+    @Column(nullable = false) 
+    private String password; 
+
+    @Column(nullable = false) 
+    private String email; 
+
+    @Column(nullable = false) 
+    private String phone; 
+
+    private String role = "ROLE_USER";
+
+    public User() {
+        // required by JPA
+    }
+
+    public User(Long id, String username, String name, String password, String email, String phone, String role) {
+        this.id = id;
         this.username = username;
         this.name = name;
         this.password = password;
@@ -17,11 +40,17 @@ public class SignupRequest {
         this.phone = phone;
         this.role = role;
     }
-    public SignupRequest(){
-        
-    }
 
     // Getters and Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }

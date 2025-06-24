@@ -27,14 +27,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
-
-        // Set role based on request, default to ROLE_USER
-        String role = request.getRole();
-        if (role == null || (!role.equals("ROLE_ADMIN") && !role.equals("ROLE_USER"))) {
-            role = "ROLE_USER";
-        }
-        user.setRole(role);
-
         userRepo.save(user);
     }
 }
+
