@@ -7,15 +7,21 @@ public class SignupRequest {
     private String password; 
     private String email; 
     private String phone;
-    
-    public SignupRequest(String username, String name, String password, String email, String phone) {
+    private String role; // ✅ Added role field
+
+    public SignupRequest(String username, String name, String password, String email, String phone, String role) {
         this.username = username;
         this.name = name;
         this.password = password;
         this.email = email;
         this.phone = phone;
+        this.role = role;
+    }
+    public SignupRequest(){
+        
     }
 
+    // Getters and Setters
     public String getUsername() {
         return username;
     }
@@ -54,8 +60,13 @@ public class SignupRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    } 
+    }
 
-    
-    
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

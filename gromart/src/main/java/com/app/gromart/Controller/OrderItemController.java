@@ -25,13 +25,15 @@ public class OrderItemController {
         return new ResponseEntity<>(orderItemService.createOrderItem(orderItem), HttpStatus.CREATED);
     }
 
-    // 🔓 Public: Get by ID
+    // both user and admin
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<OrderItem> get(@PathVariable Long id){
         return ResponseEntity.ok(orderItemService.getOrderItem(id));
     }
 
-    // 🔓 Public: Get all order items
+    //both user and admin
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping
     public List<OrderItem> getAll(){
         return orderItemService.getAllOrderItems();

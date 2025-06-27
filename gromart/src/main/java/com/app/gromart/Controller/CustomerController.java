@@ -25,7 +25,8 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.createCustomer(customer), HttpStatus.CREATED);
     }
 
-    // 🔓 Public (authenticated): Get customer by ID
+    // both user and admin
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Customer> get(@PathVariable Long id){
         return ResponseEntity.ok(customerService.getCustomer(id));

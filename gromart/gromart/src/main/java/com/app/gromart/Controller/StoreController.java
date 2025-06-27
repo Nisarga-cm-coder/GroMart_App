@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.app.gromart.Entity.Store;
@@ -17,35 +18,38 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
 
-    // Get all stores (no pagination)
+    // 🔓 Allow everyone to view all stores
     @GetMapping
     public List<Store> getAllStore() {
         return storeService.getAllStores();
     }
 
-    // Create a new store
+    // ✅ Only ADMIN can create
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Store> create(@RequestBody Store store) {
         Store created = storeService.createStore(store);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    // Get a store by ID
+    // 🔓 Allow everyone to get store by ID
     @GetMapping("/{id}")
     public ResponseEntity<Store> get(@PathVariable Long id) {
         Store store = storeService.getStore(id);
         return ResponseEntity.ok(store);
     }
 
-    // Update a store by ID
+    // ✅ Only ADMIN can update
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Store> update(@PathVariable Long id, @RequestBody Store store) {
         Store updated = storeService.updateStore(id, store);
         return ResponseEntity.ok(updated);
     }
 
-    // Delete a store by ID
+    // ✅ Only ADMIN can delete
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         storeService.deleteStore(id);
         return ResponseEntity.noContent().build();

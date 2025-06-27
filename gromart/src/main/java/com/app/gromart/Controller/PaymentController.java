@@ -26,19 +26,22 @@ public class PaymentController {
         return new ResponseEntity<>(paymentService.createPayment(payment), HttpStatus.CREATED);
     }
 
-    // 🔓 Public: Get payment by ID
+    //both admin and user
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Payment> get(@PathVariable Long id){
         return ResponseEntity.ok(paymentService.getPayment(id));
     }
 
-    // 🔓 Public: Get all payments (non-paginated)
+    //both admin and User
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping
     public List<Payment> getAll(){
         return paymentService.getAllPayments();
     }
 
-    // 🔓 Public: Get paginated + sorted payments
+    // both User and ADMIN
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/paginated")
     public ResponseEntity<Page<Payment>> getPaginatedPayments(
         @RequestParam(defaultValue = "0") int page,

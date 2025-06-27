@@ -19,13 +19,15 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // 🔓 Public access: fetch all products
+    //both admin and user
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
-    // 🔓 Public access: paginated products
+    //BOTH ADMIN AND USER
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/paginated")
     public ResponseEntity<Page<Product>> getPaginatedProducts(
         @RequestParam(defaultValue = "0") int page,
@@ -50,7 +52,8 @@ public class ProductController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    // 🔓 Public access: Get product by ID
+    // both admin and user
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Product> get(@PathVariable Long id) {
         Product product = productService.getProduct(id);

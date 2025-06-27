@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.app.gromart.Entity.Payment;
@@ -18,26 +19,26 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
-    // Create payment
+    // ✅ Admin-only: Create payment
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Payment> create(@RequestBody Payment payment){
         return new ResponseEntity<>(paymentService.createPayment(payment), HttpStatus.CREATED);
     }
 
-    // Get payment by ID
+    // 🔓 Public: Get payment by ID
     @GetMapping("/{id}")
     public ResponseEntity<Payment> get(@PathVariable Long id){
         return ResponseEntity.ok(paymentService.getPayment(id));
     }
 
-    // Get all payments (non-paginated)
+    // 🔓 Public: Get all payments (non-paginated)
     @GetMapping
     public List<Payment> getAll(){
         return paymentService.getAllPayments();
     }
 
-    //  Get paginated + sorted payments
-    //http://localhost:8081/api/payment/paginated?page=0&size=5&sort=price,desc
+    // 🔓 Public: Get paginated + sorted payments
     @GetMapping("/paginated")
     public ResponseEntity<Page<Payment>> getPaginatedPayments(
         @RequestParam(defaultValue = "0") int page,
@@ -53,14 +54,16 @@ public class PaymentController {
         return ResponseEntity.ok(payments);
     }
 
-    // Update payment
+    // ✅ Admin-only: Update payment
     @PutMapping("/put/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Payment> update(@PathVariable Long id, @RequestBody Payment payment){
         return ResponseEntity.ok(paymentService.updatePayment(id, payment));
     }
 
-    // Delete payment
+    // ✅ Admin-only: Delete payment
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         paymentService.deletePayment(id);
         return ResponseEntity.noContent().build();
