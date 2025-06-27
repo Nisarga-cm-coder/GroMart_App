@@ -3,8 +3,6 @@ package com.app.gromart.Controller;
 import com.app.gromart.dto.LoginRequest;
 import com.app.gromart.dto.SignupRequest;
 import com.app.gromart.dto.JwtResponse;
-import com.app.gromart.Entity.User;
-import com.app.gromart.Repository.UserRepo;
 import com.app.gromart.Service.UserService;
 import com.app.gromart.Config.JwtUtils;
 import com.app.gromart.Service.UserDetailsServiceImpl;
@@ -31,9 +29,6 @@ public class AuthController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private UserRepo userRepo;
-
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody SignupRequest request) {
         userService.register(request);
@@ -43,19 +38,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()));
+            new UsernamePasswordAuthenticationToken(
+                request.getUsername(),
+                request.getPassword()
+            )
+        );
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        String token = jwtUtils.generateToken(userDetails);
 
-        // Get role from DB
-        String role = userRepo.findByUsername(request.getUsername())
-                .map(User::getRole)
-                .orElse("ROLE_USER");
-
-        String token = jwtUtils.generateToken(userDetails, role);
-
-        return ResponseEntity.ok(new JwtResponse(token, role));
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 }

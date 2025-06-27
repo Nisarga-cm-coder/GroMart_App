@@ -1,0 +1,54 @@
+@startuml
+!theme mars
+
+entity Store {
+  **id**: Unique identifier for the store.
+  --
+  **storeName**: Name of the store.
+  **location**: Geographical or address-based location.
+  **contactNumber**: Phone number of the store.
+  **email**: Contact email.
+}
+
+entity Product {
+  **id**: Unique identifier.
+  --
+  **productId**: Public-facing product ID.
+  **productName**: Name of the product.
+  **category**: Product category (e.g., Dairy, Electronics).
+  **price**: Cost of the product.
+  **inStock**: Availability flag.
+}
+
+entity Customer {
+  **id**: Unique identifier.
+  --
+  **fullName**: Full name of the customer.
+  **email**: Email address.
+  **phone**: Contact number.
+  **address**: Residential or delivery address.
+}
+
+entity Payment {
+  **id**: Unique payment identifier.
+  --
+  **paymentMode**: Mode used (e.g., Card, UPI, COD).
+  **paymentDate**: Date of payment.
+  **paymentStatus**: Status (e.g., Successful, Failed).
+}
+
+entity OrderItem {
+  **id**: Unique item ID.
+  --
+  **quantity**: Number of units bought.
+  **totalPrice**: Total price for this product in the payment.
+}
+
+Store "1" --> "many" Product : has
+Product "many" --> "1" Store : offered by
+Customer "1" --> "many" Payment : makes
+Payment "many" --> "1" Customer : belongs to
+Product "1" <-- "many" OrderItem : is part of
+Payment "1" <-- "many" OrderItem : contains
+
+@enduml
