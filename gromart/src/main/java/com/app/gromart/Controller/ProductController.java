@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.app.gromart.Entity.Product;
@@ -19,15 +18,14 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    //both admin and user
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    // Get all products (non-paginated)
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
-    //BOTH ADMIN AND USER
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    // Get paginated + sorted products
+    //http://localhost:8081/api/products/paginated?page=0&size=5&sort=price,desc
     @GetMapping("/paginated")
     public ResponseEntity<Page<Product>> getPaginatedProducts(
         @RequestParam(defaultValue = "0") int page,
@@ -44,33 +42,29 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    // ✅ Admin-only: Create product
+    // Create a new product
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> create(@RequestBody Product product) {
         Product created = productService.createProduct(product);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    // both admin and user
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    // Get a product by ID
     @GetMapping("/{id}")
     public ResponseEntity<Product> get(@PathVariable Long id) {
         Product product = productService.getProduct(id);
         return ResponseEntity.ok(product);
     }
 
-    // ✅ Admin-only: Update product
+    // Update a product by ID
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product updatedProduct) {
         Product updated = productService.updateProduct(id, updatedProduct);
         return ResponseEntity.ok(updated);
     }
 
-    // ✅ Admin-only: Delete product
+    // Delete a product by ID
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
